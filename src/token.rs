@@ -11,7 +11,6 @@
 
 // token.rs - Core token types and factory methods
 
-// NOTE: maybe this should be Copy
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     Number(Number),     // NOTE:hiccup is idiomatic Rust
@@ -81,7 +80,7 @@ impl Token {
             // Parentheses
             "(" => Ok(Self::OpenParen),
             ")" => Ok(Self::CloseParen),
-            // Must be a variable
+            // Variable
             name if name.chars().all(|c| c.is_alphanumeric() || c == '_') => {
                 Ok(Self::variable(name))
             }
@@ -160,29 +159,53 @@ mod tests {
     #[test]
     fn test_token_from_str_number() {
         let t = Token::from_str("42").unwrap();
-        assert!(matches!(t, Token::Number(Number { value: 42.0, format: NumberFormat::Decimal })));
+        assert!(matches!(
+            t,
+            Token::Number(Number {
+                value: 42.0,
+                format: NumberFormat::Decimal
+            })
+        ));
     }
 
     #[test]
     fn test_token_from_str_scientific() {
         let t = Token::from_str("1.23e4").unwrap();
-        assert!(matches!(t, Token::Number(Number { value: 12300.0, format: NumberFormat::Scientific })));
+        assert!(matches!(
+            t,
+            Token::Number(Number {
+                value: 12300.0,
+                format: NumberFormat::Scientific
+            })
+        ));
     }
 
     #[test]
     fn test_token_from_str_operator() {
-        assert!(matches!(Token::from_str("+").unwrap(), Token::Operator(Operator::Add)));
+        assert!(matches!(
+            Token::from_str("+").unwrap(),
+            Token::Operator(Operator::Add)
+        ));
     }
 
     #[test]
     fn test_token_from_str_function() {
-        assert!(matches!(Token::from_str("sin").unwrap(), Token::Function(Function::Sin)));
+        assert!(matches!(
+            Token::from_str("sin").unwrap(),
+            Token::Function(Function::Sin)
+        ));
     }
 
     #[test]
     fn test_token_number_factory() {
         let t = Token::number(3.5);
-        assert!(matches!(t, Token::Number(Number { value: 3.5, format: NumberFormat::Decimal })));
+        assert!(matches!(
+            t,
+            Token::Number(Number {
+                value: 3.5,
+                format: NumberFormat::Decimal
+            })
+        ));
     }
 
     #[test]

@@ -159,13 +159,14 @@ mod tests {
 
     #[test]
     fn test_token_from_str_number() {
-        assert!(matches!(Token::from_str("42").unwrap(), Token::Number(_)));
+        let t = Token::from_str("42").unwrap();
+        assert!(matches!(t, Token::Number(Number { value: 42.0, format: NumberFormat::Decimal })));
     }
 
     #[test]
     fn test_token_from_str_scientific() {
         let t = Token::from_str("1.23e4").unwrap();
-        assert!(matches!(t, Token::Number(_)));
+        assert!(matches!(t, Token::Number(Number { value: 12300.0, format: NumberFormat::Scientific })));
     }
 
     #[test]
@@ -181,7 +182,7 @@ mod tests {
     #[test]
     fn test_token_number_factory() {
         let t = Token::number(3.5);
-        assert!(matches!(t, Token::Number(_)));
+        assert!(matches!(t, Token::Number(Number { value: 3.5, format: NumberFormat::Decimal })));
     }
 
     #[test]

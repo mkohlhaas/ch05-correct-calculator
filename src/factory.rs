@@ -254,3 +254,36 @@ impl<F: TokenFactory> Calculator<F> {
     //   Ok(())
     // }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_standard_factory_number() {
+        let f = StandardTokenFactory;
+        let n = f.create_number_token("99").unwrap();
+        assert_eq!(n.value(), 99.0);
+    }
+
+    #[test]
+    fn test_standard_factory_operator() {
+        let f = StandardTokenFactory;
+        let op = f.create_operator_token("*").unwrap();
+        assert_eq!(op.symbol(), "*");
+    }
+
+    #[test]
+    fn test_scientific_factory_scientific_notation() {
+        let f = ScientificFactory;
+        let n = f.create_number_token("1.23e-4").unwrap();
+        assert_eq!(n.value(), 0.000123);
+    }
+
+    #[test]
+    fn test_scientific_factory_function_op() {
+        let f = ScientificFactory;
+        let op = f.create_operator_token("sin").unwrap();
+        assert_eq!(op.symbol(), "sin");
+    }
+}

@@ -152,3 +152,41 @@ pub enum Function {
     Tan,
     Sqrt,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_token_from_str_number() {
+        assert!(matches!(Token::from_str("42").unwrap(), Token::Number(_)));
+    }
+
+    #[test]
+    fn test_token_from_str_scientific() {
+        let t = Token::from_str("1.23e4").unwrap();
+        assert!(matches!(t, Token::Number(_)));
+    }
+
+    #[test]
+    fn test_token_from_str_operator() {
+        assert!(matches!(Token::from_str("+").unwrap(), Token::Operator(Operator::Add)));
+    }
+
+    #[test]
+    fn test_token_from_str_function() {
+        assert!(matches!(Token::from_str("sin").unwrap(), Token::Function(Function::Sin)));
+    }
+
+    #[test]
+    fn test_token_number_factory() {
+        let t = Token::number(3.5);
+        assert!(matches!(t, Token::Number(_)));
+    }
+
+    #[test]
+    fn test_token_variable_factory() {
+        let t = Token::variable("x");
+        assert!(matches!(t, Token::Variable(s) if s == "x"));
+    }
+}

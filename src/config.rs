@@ -87,3 +87,41 @@ impl CalculatorPool {
         Arc::clone(&self.shared_config)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_default_config() {
+        let c = CalculatorConfig::default();
+        assert_eq!(c.precision, 10);
+        assert!(matches!(c.angle_mode, AngleMode::Radians));
+    }
+
+    #[test]
+    fn test_scientific_config() {
+        let c = CalculatorConfig::scientific();
+        assert_eq!(c.precision, 15);
+        assert!(matches!(c.notation, NumberFormat::Scientific));
+    }
+
+    #[test]
+    fn test_engineering_config() {
+        let c = CalculatorConfig::engineering();
+        assert!(matches!(c.notation, NumberFormat::Engineering));
+    }
+
+    #[test]
+    fn test_global_config() {
+        let cfg = get_global_config();
+        assert_eq!(cfg.precision, 10);
+    }
+
+    #[test]
+    fn test_pool_get_config() {
+        let pool = CalculatorPool::new(CalculatorConfig::default());
+        let cfg = pool.get_config();
+        assert_eq!(cfg.precision, 10);
+    }
+}

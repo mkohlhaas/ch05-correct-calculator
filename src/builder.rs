@@ -142,3 +142,70 @@ impl Expression {
             .number(0.0) // Default c coefficient
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::token::{Operator, Token};
+
+    #[test]
+    fn test_build_simple_expression() {
+        let expr = ExpressionBuilder::new()
+            .number(2.0)
+            .operator(Operator::Add)
+            .number(3.0)
+            .build()
+            .unwrap();
+        assert_eq!(expr.tokens.len(), 3);
+    }
+
+    #[test]
+    fn test_build_with_paren() {
+        let expr = ExpressionBuilder::new()
+            .number(2.0)
+            .operator(Operator::Add)
+            .open_paren()
+            .number(3.0)
+            .operator(Operator::Multiply)
+            .number(4.0)
+            .close_paren()
+            .unwrap()
+            .build()
+            .unwrap();
+        assert_eq!(expr.tokens.len(), 7);
+    }
+
+    #[test]
+    fn test_unmatched_close_paren() {
+        let res = ExpressionBuilder::new()
+            .number(1.0)
+            .close_paren();
+        assert!(res.is_err());
+    }
+
+    #[test]
+    fn test_unmatched_open_paren() {
+        let res = ExpressionBuilder::new()
+            .number(1.0)
+            .open_paren()
+            .build();
+        assert!(res.is_err());
+    }
+
+    #[test]
+    fn test_empty_expression() {
+        let res = ExpressionBuilder::new().build();
+        assert!(res.is_err());
+    }
+
+    #[test]
+    fn test_consecutive_operators() {
+        let res = ExpressionBuilder::new()
+            .number(1.0)
+            .operator(Operator::Add)
+            .operator(Operator::Multiply)
+            .number(2.0)
+            .build();
+        assert!(res.is_err());
+    }
+}

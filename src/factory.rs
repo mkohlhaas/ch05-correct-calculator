@@ -311,4 +311,31 @@ mod tests {
         let op = f.create_operator_token("sin").unwrap();
         assert_eq!(op.symbol(), "sin");
     }
+
+    #[test]
+    fn test_parse_standard_simple() {
+        let mut calc = Calculator::new(StandardTokenFactory);
+        calc.parse("2 + 3").unwrap();
+        assert_eq!(calc.expression.len(), 3);
+    }
+
+    #[test]
+    fn test_parse_standard_with_paren() {
+        let mut calc = Calculator::new(StandardTokenFactory);
+        calc.parse("2 + ( 3 * 4 )").unwrap();
+        assert_eq!(calc.expression.len(), 7);
+    }
+
+    #[test]
+    fn test_parse_scientific_with_function() {
+        let mut calc = Calculator::new(ScientificFactory);
+        calc.parse("sin + 1").unwrap();
+        assert_eq!(calc.expression.len(), 3);
+    }
+
+    #[test]
+    fn test_parse_invalid_token_fails() {
+        let mut calc = Calculator::new(StandardTokenFactory);
+        assert!(calc.parse("2 + @").is_err());
+    }
 }

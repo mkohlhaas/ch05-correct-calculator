@@ -1,11 +1,15 @@
 // Correct Calculator - Chapter 5
 // Main entry point demonstrating the calculator's features
 
+#![allow(unused_imports)]
+
 mod builder;
 mod config;
 mod factory;
 mod token;
 
+use builder::ExpressionBuilder;
+use config::CalculatorConfig;
 use factory::{NumberToken, OperatorToken, ScientificFactory, StandardTokenFactory, TokenFactory};
 use token::{Function, Operator, Token};
 
@@ -16,8 +20,6 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::builder::ExpressionBuilder;
-    use crate::config::CalculatorConfig;
 
     #[test]
     fn test_token_factory_methods() {

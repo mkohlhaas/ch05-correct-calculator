@@ -70,7 +70,7 @@ impl From<StandardNumberToken> for Token {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct StandardOperatorToken(pub Operator);
 impl OperatorToken for StandardOperatorToken {
     fn precedence(&self) -> u8 {

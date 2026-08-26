@@ -42,7 +42,6 @@ pub trait NumberToken {
 pub trait OperatorToken {
     fn precedence(&self) -> u8;
     fn symbol(&self) -> &'static str;
-    fn to_token(&self) -> Token;
 }
 
 // //////////////////// //
@@ -90,9 +89,11 @@ impl OperatorToken for StandardOperatorToken {
             Operator::Power => "^",
         }
     }
+}
 
-    fn to_token(&self) -> Token {
-        Token::Operator(self.0.clone())
+impl From<StandardOperatorToken> for Token {
+    fn from(op: StandardOperatorToken) -> Self {
+        Token::Operator(op.0)
     }
 }
 
@@ -155,11 +156,13 @@ impl OperatorToken for ScientificOperatorToken {
             },
         }
     }
+}
 
-    fn to_token(&self) -> Token {
-        match self {
-            ScientificOperatorToken::Basic(op) => Token::Operator(op.clone()),
-            ScientificOperatorToken::Function(func) => Token::Function(func.clone()),
+impl From<ScientificOperatorToken> for Token {
+    fn from(op: ScientificOperatorToken) -> Self {
+        match op {
+            ScientificOperatorToken::Basic(o) => Token::Operator(o),
+            ScientificOperatorToken::Function(f) => Token::Function(f),
         }
     }
 }
@@ -285,7 +288,7 @@ impl<F: TokenFactory> Calculator<F> {
         for token in input.split_whitespace() {
             // Try operator first
             if let Ok(op) = self.factory.create_operator_token(token) {
-                self.expression.push(op.to_token());
+                self.expression.push(op.into());
                 continue;
             }
             // Must be a number then

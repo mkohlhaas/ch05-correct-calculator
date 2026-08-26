@@ -8,7 +8,7 @@ mod token;
 
 use builder::ExpressionBuilder;
 use config::CalculatorConfig;
-use factory::{NumberToken, ScientificFactory, StandardTokenFactory, TokenFactory};
+use factory::{NumberToken, OperatorToken, ScientificFactory, StandardTokenFactory, TokenFactory};
 use token::{Function, Operator, Token};
 
 #[cfg(test)]

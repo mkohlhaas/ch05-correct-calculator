@@ -11,6 +11,10 @@ use config::CalculatorConfig;
 use factory::{NumberToken, OperatorToken, ScientificFactory, StandardTokenFactory, TokenFactory};
 use token::{Function, Operator, Token};
 
+fn main() {
+    println!("Nothing to see here!")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -30,11 +34,23 @@ mod tests {
     #[test]
     fn test_token_from_str() {
         assert!(matches!(Token::from_str("3.14").unwrap(), Token::Number(_)));
-        assert!(matches!(Token::from_str("1.0e6").unwrap(), Token::Number(_)));
+        assert!(matches!(
+            Token::from_str("1.0e6").unwrap(),
+            Token::Number(_)
+        ));
         assert!(matches!(Token::from_str("x").unwrap(), Token::Variable(s) if s == "x"));
-        assert!(matches!(Token::from_str("sin").unwrap(), Token::Function(Function::Sin)));
-        assert!(matches!(Token::from_str("cos").unwrap(), Token::Function(Function::Cos)));
-        assert!(matches!(Token::from_str("+").unwrap(), Token::Operator(Operator::Add)));
+        assert!(matches!(
+            Token::from_str("sin").unwrap(),
+            Token::Function(Function::Sin)
+        ));
+        assert!(matches!(
+            Token::from_str("cos").unwrap(),
+            Token::Function(Function::Cos)
+        ));
+        assert!(matches!(
+            Token::from_str("+").unwrap(),
+            Token::Operator(Operator::Add)
+        ));
     }
 
     #[test]
@@ -110,6 +126,9 @@ mod tests {
         assert_eq!(default_config.precision, 10);
         let sci_config = CalculatorConfig::scientific();
         assert_eq!(sci_config.precision, 15);
-        assert!(matches!(sci_config.notation, token::NumberFormat::Scientific));
+        assert!(matches!(
+            sci_config.notation,
+            token::NumberFormat::Scientific
+        ));
     }
 }

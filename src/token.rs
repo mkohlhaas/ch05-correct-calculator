@@ -196,4 +196,11 @@ mod tests {
         let n = Number::new_with_format(1234.5, NumberFormat::Engineering);
         assert_eq!(n.format(), "1.2345e3");
     }
+
+    #[test]
+    fn test_invalid_token() {
+        let res = Token::from_str("@");
+        assert!(res.is_err());
+        assert!(res.unwrap_err().contains("Invalid token"));
+    }
 }

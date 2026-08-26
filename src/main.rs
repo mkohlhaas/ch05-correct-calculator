@@ -67,6 +67,13 @@ mod tests {
     }
 
     #[test]
+    fn test_invalid_token() {
+        let res = Token::from_str("@");
+        assert!(res.is_err());
+        assert!(res.unwrap_err().contains("Invalid token"));
+    }
+
+    #[test]
     fn test_abstract_factory_standard() {
         let standard_factory = StandardTokenFactory;
         let standard_num = standard_factory.create_number_token("123").unwrap();
@@ -123,12 +130,5 @@ mod tests {
             sci_config.notation,
             token::NumberFormat::Scientific
         ));
-    }
-
-    #[test]
-    fn test_invalid_token() {
-        let res = Token::from_str("@");
-        assert!(res.is_err());
-        assert!(res.unwrap_err().contains("Invalid token"));
     }
 }

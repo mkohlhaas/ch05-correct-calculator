@@ -74,6 +74,16 @@ mod tests {
     }
 
     #[test]
+    fn test_expression_with_invalid_token_foo_at_me() {
+        let res: Result<Vec<Token>, String> = "2 + foo@me + ( 3 * 4 )"
+            .split_whitespace()
+            .map(Token::from_str)
+            .collect();
+        assert!(res.is_err());
+        assert!(res.unwrap_err().contains("Invalid token"));
+    }
+
+    #[test]
     fn test_abstract_factory_standard() {
         let standard_factory = StandardTokenFactory;
         let standard_num = standard_factory.create_number_token("123").unwrap();

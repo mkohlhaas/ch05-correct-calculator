@@ -135,7 +135,12 @@ impl OperatorToken for ScientificOperatorToken {
 // 3. Abstract Factory //
 // /////////////////// //
 
-// Abstract Factory trait with associated types
+// Abstract Factory trait with associated types as trait bounds!
+// Abstract Factory pattern makes sense bc we only want matching Numbers and Operators!
+// For example:
+// Standard   Calculator uses StandardNumberTokens   with StandardOperatorTokens
+// Scientific Calculator uses ScientificNumberTokens with ScientificOperatorTokens
+// ...
 pub trait TokenFactory {
     type Number: NumberToken;
     type Operator: OperatorToken;
@@ -241,19 +246,19 @@ impl<F: TokenFactory> Calculator<F> {
     }
 
     // TODO: parse is wrongly implemented
-    // pub fn parse(&mut self, input: &str) -> Result<(), String> {
-    //   for token in input.split_whitespace() {
-    //     // Try operator first
-    //     if let Ok(op) = self.factory.create_operator_token(token) {
-    //       self.expression.push(Token::Operator(op));
-    //       continue;
-    //     }
-    //     // Must be a number then
-    //     let num = self.factory.create_number_token(token)?;
-    //     self.expression.push(Token::Number(num));
-    //   }
-    //   Ok(())
-    // }
+    pub fn parse(&mut self, input: &str) -> Result<(), String> {
+        for token in input.split_whitespace() {
+            // Try operator first
+            if let Ok(op) = self.factory.create_operator_token(token) {
+                self.expression.push(Token::Operator(op));
+                continue;
+            }
+            // Must be a number then
+            let num = self.factory.create_number_token(token)?;
+            self.expression.push(Token::Number(num));
+        }
+        Ok(())
+    }
 }
 
 #[cfg(test)]

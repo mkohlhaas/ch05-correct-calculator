@@ -6,8 +6,6 @@ mod config;
 mod factory;
 mod token;
 
-use builder::ExpressionBuilder;
-use config::CalculatorConfig;
 use factory::{NumberToken, OperatorToken, ScientificFactory, StandardTokenFactory, TokenFactory};
 use token::{Function, Operator, Token};
 
@@ -18,6 +16,7 @@ fn main() {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::builder::ExpressionBuilder;
 
     #[test]
     fn test_token_factory_methods() {

@@ -37,11 +37,11 @@ mod tests {
     #[test]
     fn test_token_from_str() {
         assert!(matches!(Token::from_str("3.14").unwrap(), Token::Number(_)));
+        assert!(matches!(Token::from_str("x").unwrap(), Token::Variable(s) if s == "x"));
         assert!(matches!(
             Token::from_str("1.0e6").unwrap(),
             Token::Number(_)
         ));
-        assert!(matches!(Token::from_str("x").unwrap(), Token::Variable(s) if s == "x"));
         assert!(matches!(
             Token::from_str("sin").unwrap(),
             Token::Function(Function::Sin)
@@ -58,16 +58,6 @@ mod tests {
 
     #[test]
     fn test_expression_parsing_with_spaces() {
-        let tokens: Result<Vec<Token>, String> = "2 + ( 3 * 4 )"
-            .split_whitespace()
-            .map(Token::from_str)
-            .collect();
-        assert!(tokens.is_ok());
-        assert_eq!(tokens.unwrap().len(), 7);
-    }
-
-    #[test]
-    fn test_expression_parsing_without_extra_spaces() {
         let tokens: Result<Vec<Token>, String> = "2 + ( 3 * 4 )"
             .split_whitespace()
             .map(Token::from_str)

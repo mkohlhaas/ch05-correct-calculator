@@ -49,7 +49,7 @@ mod tests {
 
     #[test]
     fn test_expression_parsing_without_extra_spaces() {
-        let tokens: Result<Vec<_>, _> = "2 + (3 * 4)"
+        let tokens: Result<Vec<Token>, String> = "2 + ( 3 * 4 )"
             .split_whitespace()
             .map(Token::from_str)
             .collect();

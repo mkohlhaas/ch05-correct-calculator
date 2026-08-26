@@ -286,6 +286,14 @@ impl<F: TokenFactory> Calculator<F> {
 
     pub fn parse(&mut self, input: &str) -> Result<(), String> {
         for token in input.split_whitespace() {
+            if token == "(" {
+                self.expression.push(Token::OpenParen);
+                continue;
+            }
+            if token == ")" {
+                self.expression.push(Token::CloseParen);
+                continue;
+            }
             // Try operator first
             if let Ok(op) = self.factory.create_operator_token(token) {
                 self.expression.push(op.into());

@@ -18,7 +18,6 @@ use crate::token::{Function, Number, NumberFormat, Operator};
 
 // We want to produce Tokens!
 
-// NOTE: These traits are useless!
 // Trait for number tokens
 pub trait NumberToken {
     fn value(&self) -> f64;

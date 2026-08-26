@@ -95,14 +95,14 @@ mod tests {
 
     #[test]
     fn test_manual_expressions() {
-        let expr1 = vec![
+        let expr1 = [
             Token::number(2.0),
             Token::operator(Operator::Add),
             Token::number(3.0),
         ];
         assert_eq!(expr1.len(), 3);
 
-        let expr2 = vec![Token::function(Function::Sin), Token::variable("x")];
+        let expr2 = [Token::function(Function::Sin), Token::variable("x")];
         assert_eq!(expr2.len(), 2);
     }
 

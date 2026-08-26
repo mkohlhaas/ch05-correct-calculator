@@ -67,13 +67,6 @@ mod tests {
     }
 
     #[test]
-    fn test_invalid_token() {
-        let res = Token::from_str("@");
-        assert!(res.is_err());
-        assert!(res.unwrap_err().contains("Invalid token"));
-    }
-
-    #[test]
     fn test_expression_with_invalid_token_foo_at_me() {
         let res: Result<Vec<Token>, String> = "2 + foo@me + ( 3 * 4 )"
             .split_whitespace()

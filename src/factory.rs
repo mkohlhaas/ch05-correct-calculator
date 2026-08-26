@@ -7,6 +7,19 @@
 // "Instead of the complex inheritance hierarchies often seen in object-oriented languages, we get a
 // clean, type-safe solution."
 
+// What do you think about the application of the abstract factory pattern? Does it make any sense?
+
+// Yes, conceptually it fits.
+//
+// TokenFactory creates matched families (StandardNumberToken + StandardOperatorToken vs.
+// ScientificNumberToken + ScientificOperatorToken), which is exactly what Abstract Factory is for:
+// ensuring a calculator uses consistent token types without hard-coding concrete classes. It makes
+// sense here because the trait uses associated types to bind the family together, and Calculator<F>
+// stays generic over the factory. The main caveat is that the concrete products are thin wrappers
+// around Number/Operator; the pattern pays off more if the families diverge in behavior
+// (formatting, precedence, evaluation). As a structural demonstration it works, but it’s slightly
+// heavy for just parsing strings into an enum.
+
 // factory.rs - Abstract Factory implementation
 
 use crate::Token;
@@ -250,6 +263,9 @@ impl TokenFactory for ScientificFactory {
 // ////////////// //
 // 5. Client Code //
 // ////////////// //
+
+// Our Calculator only parses input into self.expression (Vec<Token>).
+// It has no evaluate or computation method, so it does not calculate any result yet.
 
 // NOTE: here is our Calculator, but not used!
 struct Calculator<F: TokenFactory> {

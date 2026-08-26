@@ -190,4 +190,10 @@ mod tests {
         let t = Token::variable("x");
         assert!(matches!(t, Token::Variable(s) if s == "x"));
     }
+
+    #[test]
+    fn test_number_format_engineering() {
+        let n = Number::new_with_format(1234.5, NumberFormat::Engineering);
+        assert_eq!(n.format(), "1.2345e3");
+    }
 }

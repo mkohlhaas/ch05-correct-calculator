@@ -35,7 +35,6 @@ use crate::token::{Function, Number, NumberFormat, Operator};
 pub trait NumberToken {
     fn value(&self) -> f64;
     fn format(&self) -> String;
-    fn to_token(&self) -> Token;
 }
 
 // Trait for operator tokens
@@ -63,9 +62,11 @@ impl NumberToken for StandardNumberToken {
     fn format(&self) -> String {
         self.0.format()
     }
+}
 
-    fn to_token(&self) -> Token {
-        Token::Number(self.0.clone())
+impl From<StandardNumberToken> for Token {
+    fn from(num: StandardNumberToken) -> Self {
+        Token::Number(num.0)
     }
 }
 
@@ -116,9 +117,11 @@ impl NumberToken for ScientificNumberToken {
             _ => self.0.format(),
         }
     }
+}
 
-    fn to_token(&self) -> Token {
-        Token::Number(self.0.clone())
+impl From<ScientificNumberToken> for Token {
+    fn from(num: ScientificNumberToken) -> Self {
+        Token::Number(num.0)
     }
 }
 
@@ -178,7 +181,7 @@ impl From<ScientificOperatorToken> for Token {
 // Scientific Calculator uses ScientificNumberTokens with ScientificOperatorTokens
 // ...
 pub trait TokenFactory {
-    type Number: NumberToken;
+    type Number: NumberToken + Into<Token>;
     type Operator: OperatorToken + Into<Token>;
 
     fn create_number_token(&self, s: &str) -> Result<Self::Number, String>;
@@ -301,7 +304,7 @@ impl<F: TokenFactory> Calculator<F> {
             }
             // Must be a number then
             let num = self.factory.create_number_token(token)?;
-            self.expression.push(num.to_token());
+            self.expression.push(num.into());
         }
         Ok(())
     }

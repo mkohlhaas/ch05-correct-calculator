@@ -36,6 +36,11 @@ impl Token {
         Self::Number(Number::new_with_format(value, NumberFormat::Scientific))
     }
 
+    // Factory method for engineering notation
+    pub fn engineering_number(value: f64) -> Self {
+        Self::Number(Number::new_with_format(value, NumberFormat::Engineering))
+    }
+
     // Factory method for operators
     pub fn operator(op: Operator) -> Self {
         Self::Operator(op)

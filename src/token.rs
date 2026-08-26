@@ -62,10 +62,7 @@ impl Token {
         // Try parsing as a number first
         if let Ok(num) = s.parse::<f64>() {
             if s.contains('e') || s.contains('E') {
-                return Ok(Self::Number(Number::new_with_format(
-                    num,
-                    NumberFormat::Scientific,
-                )));
+                return Ok(Self::scientific_number(num));
             }
             return Ok(Self::number(num));
         }

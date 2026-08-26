@@ -23,12 +23,14 @@ use crate::token::{Function, Number, NumberFormat, Operator};
 pub trait NumberToken {
     fn value(&self) -> f64;
     fn format(&self) -> String;
+    fn to_token(&self) -> Token;
 }
 
 // Trait for operator tokens
 pub trait OperatorToken {
     fn precedence(&self) -> u8;
     fn symbol(&self) -> &'static str;
+    fn to_token(&self) -> Token;
 }
 
 // //////////////////// //
@@ -49,6 +51,10 @@ impl NumberToken for StandardNumberToken {
 
     fn format(&self) -> String {
         self.0.format()
+    }
+
+    fn to_token(&self) -> Token {
+        Token::Number(self.0.clone())
     }
 }
 
@@ -72,6 +78,10 @@ impl OperatorToken for StandardOperatorToken {
             Operator::Power => "^",
         }
     }
+
+    fn to_token(&self) -> Token {
+        Token::Operator(self.0.clone())
+    }
 }
 
 // ////////////////////////// //
@@ -92,6 +102,10 @@ impl NumberToken for ScientificNumberToken {
             NumberFormat::Decimal => format!("{:e}", self.0.value),
             _ => self.0.format(),
         }
+    }
+
+    fn to_token(&self) -> Token {
+        Token::Number(self.0.clone())
     }
 }
 
@@ -127,6 +141,13 @@ impl OperatorToken for ScientificOperatorToken {
                 Function::Tan => "tan",
                 Function::Sqrt => "sqrt",
             },
+        }
+    }
+
+    fn to_token(&self) -> Token {
+        match self {
+            ScientificOperatorToken::Basic(op) => Token::Operator(op.clone()),
+            ScientificOperatorToken::Function(func) => Token::Function(func.clone()),
         }
     }
 }
@@ -245,17 +266,16 @@ impl<F: TokenFactory> Calculator<F> {
         }
     }
 
-    // TODO: parse is wrongly implemented
     pub fn parse(&mut self, input: &str) -> Result<(), String> {
         for token in input.split_whitespace() {
             // Try operator first
             if let Ok(op) = self.factory.create_operator_token(token) {
-                self.expression.push(Token::Operator(op));
+                self.expression.push(op.to_token());
                 continue;
             }
             // Must be a number then
             let num = self.factory.create_number_token(token)?;
-            self.expression.push(Token::Number(num));
+            self.expression.push(num.to_token());
         }
         Ok(())
     }

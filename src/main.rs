@@ -77,6 +77,16 @@ mod tests {
     }
 
     #[test]
+    fn test_expression_2_plus_foo_plus_3_times_4() {
+        let res: Result<Vec<Token>, String> = "2 + foo + ( 3 * 4 )"
+            .split_whitespace()
+            .map(Token::from_str)
+            .collect();
+        assert!(res.is_ok());
+        assert_eq!(res.unwrap().len(), 9);
+    }
+
+    #[test]
     fn test_abstract_factory_standard() {
         let standard_factory = StandardTokenFactory;
         let standard_num = standard_factory.create_number_token("123").unwrap();

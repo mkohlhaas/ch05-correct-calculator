@@ -52,7 +52,7 @@ pub trait OperatorToken {
 // /////////////////////// //
 
 // Standard calculator implementation
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub struct StandardNumberToken(pub Number);
 impl NumberToken for StandardNumberToken {
     fn value(&self) -> f64 {

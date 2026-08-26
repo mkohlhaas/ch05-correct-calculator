@@ -179,7 +179,7 @@ impl From<ScientificOperatorToken> for Token {
 // ...
 pub trait TokenFactory {
     type Number: NumberToken;
-    type Operator: OperatorToken;
+    type Operator: OperatorToken + Into<Token>;
 
     fn create_number_token(&self, s: &str) -> Result<Self::Number, String>;
     fn create_operator_token(&self, s: &str) -> Result<Self::Operator, String>;

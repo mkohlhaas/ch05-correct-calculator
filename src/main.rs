@@ -17,6 +17,7 @@ fn main() {
 mod tests {
     use super::*;
     use crate::builder::ExpressionBuilder;
+    use crate::config::CalculatorConfig;
 
     #[test]
     fn test_token_factory_methods() {

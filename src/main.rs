@@ -8,6 +8,7 @@ mod config;
 mod factory;
 mod token;
 
+// for testing
 use builder::ExpressionBuilder;
 use config::CalculatorConfig;
 use factory::{NumberToken, OperatorToken, ScientificFactory, StandardTokenFactory, TokenFactory};

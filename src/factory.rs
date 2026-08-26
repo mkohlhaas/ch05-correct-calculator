@@ -226,6 +226,7 @@ impl TokenFactory for ScientificFactory {
 // 5. Client Code //
 // ////////////// //
 
+// NOTE: here is our Calculator, but not used!
 struct Calculator<F: TokenFactory> {
     factory: F,
     expression: Vec<Token>,

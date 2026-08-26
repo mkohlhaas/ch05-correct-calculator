@@ -13,17 +13,17 @@
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
-    Number(Number),     // NOTE:hiccup is idiomatic Rust
-    Operator(Operator), // NOTE:hiccup is idiomatic Rust
-    Function(Function), // NOTE:hiccup is idiomatic Rust
+    Number(Number), // NOTE:hiccup is idiomatic Rust - The outer Number is the Token variant name; the inner is the wrapped Number enum type.
+    Operator(Operator),
+    Function(Function),
     Variable(String),
     OpenParen,
     CloseParen,
 }
 
-// ////////////////////////////////////// //
+// ====================================== //
 // Factory methods/constructors for Token //
-// ////////////////////////////////////// //
+// ====================================== //
 
 impl Token {
     // Factory method for creating number tokens
@@ -52,7 +52,7 @@ impl Token {
     }
 
     // Factory method for variables
-    // NOTE: `impl Into<String>`
+    // NOTE: `impl Into<String>` (accepts any type convertible to String)
     pub fn variable(name: impl Into<String>) -> Self {
         Self::Variable(name.into())
     }
@@ -92,7 +92,6 @@ impl Token {
     }
 }
 
-// NOTE: maybe this should be Copy
 #[derive(Default, Debug, Clone, PartialEq)]
 pub enum NumberFormat {
     #[default]
@@ -102,7 +101,6 @@ pub enum NumberFormat {
     // More formats can be added …
 }
 
-// NOTE: maybe this should be Copy
 #[derive(Default, Debug, Clone, PartialEq)]
 pub struct Number {
     pub value: f64,
@@ -135,7 +133,6 @@ impl Number {
     }
 }
 
-// NOTE: maybe this should be Copy
 #[derive(Debug, Clone, PartialEq)]
 pub enum Operator {
     Add,
@@ -145,7 +142,6 @@ pub enum Operator {
     Power,
 }
 
-// NOTE: maybe this should be Copy
 #[derive(Debug, Clone, PartialEq)]
 pub enum Function {
     Sin,

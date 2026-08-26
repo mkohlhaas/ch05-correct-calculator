@@ -43,17 +43,18 @@ pub trait OperatorToken {
     fn symbol(&self) -> &'static str;
 }
 
-// //////////////////// //
+// ==================== //
 // 2. Concrete Products //
-// //////////////////// //
+// ==================== //
 
-// /////////////////////// //
-// 2.1 Standard Calculator //
-// /////////////////////// //
+// ------------------- //
+// 2.1 Standard Tokens //
+// ------------------- //
 
 // Standard calculator implementation
 #[derive(Debug, PartialEq)]
-pub struct StandardNumberToken(pub Number);
+pub struct StandardNumberToken(Number);
+
 impl NumberToken for StandardNumberToken {
     fn value(&self) -> f64 {
         self.0.value
@@ -71,7 +72,8 @@ impl From<StandardNumberToken> for Token {
 }
 
 #[derive(Debug, PartialEq)]
-pub struct StandardOperatorToken(pub Operator);
+pub struct StandardOperatorToken(Operator);
+
 impl OperatorToken for StandardOperatorToken {
     fn precedence(&self) -> u8 {
         match self.0 {
@@ -98,24 +100,21 @@ impl From<StandardOperatorToken> for Token {
     }
 }
 
-// ////////////////////////// //
-// 2.2. Scientific calculator //
-// ////////////////////////// //
+// ---------------------- //
+// 2.2. Scientific Tokens //
+// ---------------------- //
 
 // Scientific calculator implementation
-#[derive(Debug, Clone, PartialEq)]
-pub struct ScientificNumberToken(pub Number);
+#[derive(Debug, PartialEq)]
+pub struct ScientificNumberToken(Number);
+
 impl NumberToken for ScientificNumberToken {
     fn value(&self) -> f64 {
         self.0.value
     }
 
     fn format(&self) -> String {
-        // Scientific calculator prefers scientific notation by default
-        match self.0.format {
-            NumberFormat::Decimal => format!("{:e}", self.0.value),
-            _ => self.0.format(),
-        }
+        self.0.format()
     }
 }
 
@@ -125,11 +124,12 @@ impl From<ScientificNumberToken> for Token {
     }
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum ScientificOperatorToken {
     Basic(Operator),
     Function(Function),
 }
+
 impl OperatorToken for ScientificOperatorToken {
     fn precedence(&self) -> u8 {
         match self {
@@ -170,9 +170,9 @@ impl From<ScientificOperatorToken> for Token {
     }
 }
 
-// /////////////////// //
+// =================== //
 // 3. Abstract Factory //
-// /////////////////// //
+// =================== //
 
 // Abstract Factory trait with associated types as trait bounds!
 // Abstract Factory pattern makes sense bc we only want matching Numbers and Operators!
@@ -180,6 +180,7 @@ impl From<ScientificOperatorToken> for Token {
 // Standard   Calculator uses StandardNumberTokens   with StandardOperatorTokens
 // Scientific Calculator uses ScientificNumberTokens with ScientificOperatorTokens
 // ...
+
 pub trait TokenFactory {
     type Number: NumberToken + Into<Token>;
     type Operator: OperatorToken + Into<Token>;
@@ -188,16 +189,17 @@ pub trait TokenFactory {
     fn create_operator_token(&self, s: &str) -> Result<Self::Operator, String>;
 }
 
-// ///////////////////// //
+// ===================== //
 // 4. Concrete Factories //
-// ///////////////////// //
+// ===================== //
 
-// ////////////////////////// //
+// -------------------------- //
 // 4.1 Standard Token Factory //
-// ////////////////////////// //
+// -------------------------- //
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug)]
 pub struct StandardTokenFactory;
+
 impl TokenFactory for StandardTokenFactory {
     type Number = StandardNumberToken;
     type Operator = StandardOperatorToken;
@@ -221,11 +223,11 @@ impl TokenFactory for StandardTokenFactory {
     }
 }
 
-// //////////////////////////// //
+// ---------------------------- //
 // 4.2 Scientific Token Factory //
-// //////////////////////////// //
+// ---------------------------- //
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug)]
 pub struct ScientificFactory;
 
 impl TokenFactory for ScientificFactory {
@@ -266,9 +268,9 @@ impl TokenFactory for ScientificFactory {
     }
 }
 
-// ////////////// //
+// ============== //
 // 5. Client Code //
-// ////////////// //
+// ============== //
 
 // Our Calculator only parses input into self.expression (Vec<Token>).
 // It has no evaluate or computation method, so it does not calculate any result yet.
@@ -287,7 +289,7 @@ impl<F: TokenFactory> Calculator<F> {
         }
     }
 
-    pub fn parse(&mut self, input: &str) -> Result<(), String> {
+    pub fn parse(&mut self, input: &str) -> Result<Vec<Token>, String> {
         for token in input.split_whitespace() {
             if token == "(" {
                 self.expression.push(Token::OpenParen);
@@ -297,18 +299,22 @@ impl<F: TokenFactory> Calculator<F> {
                 self.expression.push(Token::CloseParen);
                 continue;
             }
-            // Try operator first
+            // Try operator first ...
             if let Ok(op) = self.factory.create_operator_token(token) {
                 self.expression.push(op.into());
                 continue;
             }
-            // Must be a number then
+            // ... must be a number then.
             let num = self.factory.create_number_token(token)?;
             self.expression.push(num.into());
         }
-        Ok(())
+        Ok(self.expression.clone())
     }
 }
+
+// ===== //
+// Tests //
+// ===== //
 
 #[cfg(test)]
 mod tests {

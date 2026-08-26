@@ -97,18 +97,22 @@ mod tests {
         let c = CalculatorConfig::default();
         assert_eq!(c.precision, 10);
         assert!(matches!(c.angle_mode, AngleMode::Radians));
+        assert!(matches!(c.notation, NumberFormat::Decimal));
     }
 
     #[test]
     fn test_scientific_config() {
         let c = CalculatorConfig::scientific();
         assert_eq!(c.precision, 15);
+        assert!(matches!(c.angle_mode, AngleMode::Radians));
         assert!(matches!(c.notation, NumberFormat::Scientific));
     }
 
     #[test]
     fn test_engineering_config() {
         let c = CalculatorConfig::engineering();
+        assert_eq!(c.precision, 10);
+        assert!(matches!(c.angle_mode, AngleMode::Radians));
         assert!(matches!(c.notation, NumberFormat::Engineering));
     }
 
@@ -116,6 +120,8 @@ mod tests {
     fn test_global_config() {
         let cfg = get_global_config();
         assert_eq!(cfg.precision, 10);
+        assert!(matches!(cfg.angle_mode, AngleMode::Radians));
+        assert!(matches!(cfg.notation, NumberFormat::Decimal));
     }
 
     #[test]
@@ -123,5 +129,7 @@ mod tests {
         let pool = CalculatorPool::new(CalculatorConfig::default());
         let cfg = pool.get_config();
         assert_eq!(cfg.precision, 10);
+        assert!(matches!(cfg.angle_mode, AngleMode::Radians));
+        assert!(matches!(cfg.notation, NumberFormat::Decimal));
     }
 }

@@ -124,4 +124,11 @@ mod tests {
             token::NumberFormat::Scientific
         ));
     }
+
+    #[test]
+    fn test_invalid_token() {
+        let res = Token::from_str("@");
+        assert!(res.is_err());
+        assert!(res.unwrap_err().contains("Invalid token"));
+    }
 }

@@ -20,6 +20,10 @@
 // (formatting, precedence, evaluation). As a structural demonstration it works, but it’s slightly
 // heavy for just parsing strings into an enum.
 
+// "Traits combined with associated types allow us to ensure that all tokens from a given factory
+// work together correctly. This gives us compile-time guarantees that we can't mix incompatible
+// token types."
+
 // factory.rs - Abstract Factory implementation
 
 use crate::Token;

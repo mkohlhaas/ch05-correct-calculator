@@ -11,6 +11,8 @@
 
 // token.rs - Core token types and factory methods
 
+use std::fmt;
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Token {
     Number(Number), // NOTE:hiccup is idiomatic Rust - The outer Number is the Token variant name; the inner is the wrapped Number enum type.
@@ -118,17 +120,18 @@ impl Number {
     pub fn new_with_kind(value: f64, kind: NumberKind) -> Self {
         Self { value, kind }
     }
+}
 
-    // NOTE: Should be implemented as Display trait
-    pub fn format(&self) -> String {
+impl fmt::Display for Number {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.kind {
-            NumberKind::Decimal => format!("{}", self.value),
-            NumberKind::Scientific => format!("{:e}", self.value),
+            NumberKind::Decimal => write!(f, "{}", self.value),
+            NumberKind::Scientific => write!(f, "{:e}", self.value),
             NumberKind::Engineering => {
                 let exp = self.value.abs().log10().floor();
                 let adj_exp = (exp - exp % 3.0).floor();
                 let coeff = self.value / 10_f64.powf(adj_exp);
-                format!("{}e{}", coeff, adj_exp)
+                write!(f, "{}e{}", coeff, adj_exp)
             }
         }
     }
@@ -216,7 +219,7 @@ mod tests {
     #[test]
     fn test_number_format_engineering() {
         let n = Number::new_with_kind(1234.5, NumberKind::Engineering);
-        assert_eq!(n.format(), "1.2345e3");
+        assert_eq!(n.to_string(), "1.2345e3");
     }
 
     #[test]

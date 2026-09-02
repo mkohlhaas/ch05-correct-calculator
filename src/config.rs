@@ -2,7 +2,7 @@
 
 // config.rs - Configuration (alternative to Singleton)
 
-use crate::token::NumberFormat;
+use crate::token::NumberKind;
 use std::sync::OnceLock;
 
 #[derive(Default, Debug, Clone)]
@@ -16,7 +16,7 @@ pub enum AngleMode {
 pub struct CalculatorConfig {
     pub precision: u32,
     pub angle_mode: AngleMode,
-    pub notation: NumberFormat,
+    pub notation: NumberKind,
 }
 
 impl Default for CalculatorConfig {
@@ -38,14 +38,14 @@ impl CalculatorConfig {
     pub fn scientific() -> Self {
         Self {
             precision: 15,
-            notation: NumberFormat::Scientific,
+            notation: NumberKind::Scientific,
             ..Default::default()
         }
     }
 
     pub fn engineering() -> Self {
         Self {
-            notation: NumberFormat::Engineering,
+            notation: NumberKind::Engineering,
             ..Default::default()
         }
     }
@@ -97,7 +97,7 @@ mod tests {
         let c = CalculatorConfig::default();
         assert_eq!(c.precision, 10);
         assert!(matches!(c.angle_mode, AngleMode::Radians));
-        assert!(matches!(c.notation, NumberFormat::Decimal));
+        assert!(matches!(c.notation, NumberKind::Decimal));
     }
 
     #[test]
@@ -105,7 +105,7 @@ mod tests {
         let c = CalculatorConfig::scientific();
         assert_eq!(c.precision, 15);
         assert!(matches!(c.angle_mode, AngleMode::Radians));
-        assert!(matches!(c.notation, NumberFormat::Scientific));
+        assert!(matches!(c.notation, NumberKind::Scientific));
     }
 
     #[test]
@@ -113,7 +113,7 @@ mod tests {
         let c = CalculatorConfig::engineering();
         assert_eq!(c.precision, 10);
         assert!(matches!(c.angle_mode, AngleMode::Radians));
-        assert!(matches!(c.notation, NumberFormat::Engineering));
+        assert!(matches!(c.notation, NumberKind::Engineering));
     }
 
     #[test]
@@ -121,7 +121,7 @@ mod tests {
         let cfg = get_global_config();
         assert_eq!(cfg.precision, 10);
         assert!(matches!(cfg.angle_mode, AngleMode::Radians));
-        assert!(matches!(cfg.notation, NumberFormat::Decimal));
+        assert!(matches!(cfg.notation, NumberKind::Decimal));
     }
 
     #[test]
@@ -130,6 +130,6 @@ mod tests {
         let cfg = pool.get_config();
         assert_eq!(cfg.precision, 10);
         assert!(matches!(cfg.angle_mode, AngleMode::Radians));
-        assert!(matches!(cfg.notation, NumberFormat::Decimal));
+        assert!(matches!(cfg.notation, NumberKind::Decimal));
     }
 }

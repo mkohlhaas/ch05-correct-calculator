@@ -24,6 +24,10 @@
 // work together correctly. This gives us compile-time guarantees that we can't mix incompatible
 // token types."
 
+// This approach gives us several advantages. Each calculator mode is self-contained, and Token
+// types are guaranteed to work together. We can add new modes without modifying existing code,
+// while the type system ensures we don't mix incompatible tokens.
+
 // factory.rs - Abstract Factory implementation
 
 use crate::Token;
@@ -34,7 +38,7 @@ use std::fmt::{self, Display};
 // 1. Abstract Products //
 // //////////////////// //
 
-// We want to produce different kinds of Tokens!
+// Our goal is to produce different kinds of Tokens from &str for parsing purposes.
 
 // Trait for number tokens
 pub trait NumberToken {
@@ -196,6 +200,7 @@ pub trait TokenFactory {
     type Number: NumberToken + Into<Token>;
     type Operator: OperatorToken + Into<Token>;
 
+    // create tokens from &str
     fn create_number_token(&self, s: &str) -> Result<Self::Number, String>;
     fn create_operator_token(&self, s: &str) -> Result<Self::Operator, String>;
 }

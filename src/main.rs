@@ -139,9 +139,6 @@ mod tests {
         assert_eq!(default_config.precision, 10);
         let sci_config = CalculatorConfig::scientific();
         assert_eq!(sci_config.precision, 15);
-        assert!(matches!(
-            sci_config.notation,
-            token::NumberFormat::Scientific
-        ));
+        assert!(matches!(sci_config.notation, token::NumberKind::Scientific));
     }
 }

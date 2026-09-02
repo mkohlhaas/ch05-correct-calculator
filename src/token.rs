@@ -33,12 +33,12 @@ impl Token {
 
     // Factory method for scientific notation
     pub fn scientific_number(value: f64) -> Self {
-        Self::Number(Number::new_with_format(value, NumberFormat::Scientific))
+        Self::Number(Number::new_with_kind(value, NumberKind::Scientific))
     }
 
     // Factory method for engineering notation
     pub fn engineering_number(value: f64) -> Self {
-        Self::Number(Number::new_with_format(value, NumberFormat::Engineering))
+        Self::Number(Number::new_with_kind(value, NumberKind::Engineering))
     }
 
     // Factory method for operators
@@ -59,7 +59,7 @@ impl Token {
 
     // Factory method for all tokens from string
     pub fn from_str(s: &str) -> Result<Self, String> {
-        // Try parsing as a number first
+        // try parsing as a number first
         if let Ok(num) = s.parse::<f64>() {
             if s.contains('e') || s.contains('E') {
                 return Ok(Self::scientific_number(num));
@@ -67,8 +67,8 @@ impl Token {
             return Ok(Self::number(num));
         }
 
-        // Check for operators
         match s {
+            // Operators
             "+" => Ok(Self::operator(Operator::Add)),
             "-" => Ok(Self::operator(Operator::Subtract)),
             "*" => Ok(Self::operator(Operator::Multiply)),
@@ -93,37 +93,38 @@ impl Token {
 }
 
 #[derive(Default, Debug, Clone, PartialEq)]
-pub enum NumberFormat {
+pub enum NumberKind {
     #[default]
     Decimal,
     Scientific,
     Engineering,
-    // More formats can be added …
+    // more kinds can be added …
 }
 
 #[derive(Default, Debug, Clone, PartialEq)]
 pub struct Number {
     pub value: f64,
-    pub format: NumberFormat,
+    pub kind: NumberKind,
 }
 
 impl Number {
     pub fn new(value: f64) -> Self {
         Self {
             value,
-            format: Default::default(),
+            kind: Default::default(),
         }
     }
 
-    pub fn new_with_format(value: f64, format: NumberFormat) -> Self {
-        Self { value, format }
+    pub fn new_with_kind(value: f64, kind: NumberKind) -> Self {
+        Self { value, kind }
     }
 
+    // NOTE: Should be implemented as Display trait
     pub fn format(&self) -> String {
-        match self.format {
-            NumberFormat::Decimal => format!("{}", self.value),
-            NumberFormat::Scientific => format!("{:e}", self.value),
-            NumberFormat::Engineering => {
+        match self.kind {
+            NumberKind::Decimal => format!("{}", self.value),
+            NumberKind::Scientific => format!("{:e}", self.value),
+            NumberKind::Engineering => {
                 let exp = self.value.abs().log10().floor();
                 let adj_exp = (exp - exp % 3.0).floor();
                 let coeff = self.value / 10_f64.powf(adj_exp);
@@ -161,7 +162,7 @@ mod tests {
             t,
             Token::Number(Number {
                 value: 42.0,
-                format: NumberFormat::Decimal
+                kind: NumberKind::Decimal
             })
         ));
     }
@@ -173,7 +174,7 @@ mod tests {
             t,
             Token::Number(Number {
                 value: 12300.0,
-                format: NumberFormat::Scientific
+                kind: NumberKind::Scientific
             })
         ));
     }
@@ -201,7 +202,7 @@ mod tests {
             t,
             Token::Number(Number {
                 value: 3.5,
-                format: NumberFormat::Decimal
+                kind: NumberKind::Decimal
             })
         ));
     }
@@ -214,7 +215,7 @@ mod tests {
 
     #[test]
     fn test_number_format_engineering() {
-        let n = Number::new_with_format(1234.5, NumberFormat::Engineering);
+        let n = Number::new_with_kind(1234.5, NumberKind::Engineering);
         assert_eq!(n.format(), "1.2345e3");
     }
 

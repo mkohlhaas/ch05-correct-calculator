@@ -35,12 +35,12 @@ impl Token {
 
     // Factory method for scientific notation
     pub fn scientific_number(value: f64) -> Self {
-        Self::Number(Number::new_with_kind(value, NumberKind::Scientific))
+        Self::Number(Number::new_with_kind(value, NumberType::Scientific))
     }
 
     // Factory method for engineering notation
     pub fn engineering_number(value: f64) -> Self {
-        Self::Number(Number::new_with_kind(value, NumberKind::Engineering))
+        Self::Number(Number::new_with_kind(value, NumberType::Engineering))
     }
 
     // Factory method for operators
@@ -95,7 +95,7 @@ impl Token {
 }
 
 #[derive(Default, Debug, Clone, PartialEq)]
-pub enum NumberKind {
+pub enum NumberType {
     #[default]
     Decimal,
     Scientific,
@@ -106,7 +106,7 @@ pub enum NumberKind {
 #[derive(Default, Debug, Clone, PartialEq)]
 pub struct Number {
     pub value: f64,
-    pub kind: NumberKind,
+    pub kind: NumberType,
 }
 
 impl Number {
@@ -117,7 +117,7 @@ impl Number {
         }
     }
 
-    pub fn new_with_kind(value: f64, kind: NumberKind) -> Self {
+    pub fn new_with_kind(value: f64, kind: NumberType) -> Self {
         Self { value, kind }
     }
 }
@@ -125,9 +125,9 @@ impl Number {
 impl fmt::Display for Number {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self.kind {
-            NumberKind::Decimal => write!(f, "{}", self.value),
-            NumberKind::Scientific => write!(f, "{:e}", self.value),
-            NumberKind::Engineering => {
+            NumberType::Decimal => write!(f, "{}", self.value),
+            NumberType::Scientific => write!(f, "{:e}", self.value),
+            NumberType::Engineering => {
                 let exp = self.value.abs().log10().floor();
                 let adj_exp = (exp - exp % 3.0).floor();
                 let coeff = self.value / 10_f64.powf(adj_exp);
@@ -165,7 +165,7 @@ mod tests {
             t,
             Token::Number(Number {
                 value: 42.0,
-                kind: NumberKind::Decimal
+                kind: NumberType::Decimal
             })
         ));
     }
@@ -177,7 +177,7 @@ mod tests {
             t,
             Token::Number(Number {
                 value: 12300.0,
-                kind: NumberKind::Scientific
+                kind: NumberType::Scientific
             })
         ));
     }
@@ -205,7 +205,7 @@ mod tests {
             t,
             Token::Number(Number {
                 value: 3.5,
-                kind: NumberKind::Decimal
+                kind: NumberType::Decimal
             })
         ));
     }
@@ -218,7 +218,7 @@ mod tests {
 
     #[test]
     fn test_number_format_engineering() {
-        let n = Number::new_with_kind(1234.5, NumberKind::Engineering);
+        let n = Number::new_with_kind(1234.5, NumberType::Engineering);
         assert_eq!(n.to_string(), "1.2345e3");
     }
 

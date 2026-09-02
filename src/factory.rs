@@ -31,7 +31,7 @@
 // factory.rs - Abstract Factory implementation
 
 use crate::Token;
-use crate::token::{Function, Number, NumberKind, Operator};
+use crate::token::{Function, Number, NumberType, Operator};
 use std::fmt::{self, Display};
 
 // //////////////////// //
@@ -255,9 +255,9 @@ impl TokenFactory for ScientificFactory {
         match s.parse::<f64>() {
             Ok(value) => {
                 let format = if s.contains('e') || s.contains('E') {
-                    NumberKind::Scientific
+                    NumberType::Scientific
                 } else {
-                    NumberKind::Decimal
+                    NumberType::Decimal
                 };
                 Ok(ScientificNumberToken(Number::new_with_kind(value, format)))
             }

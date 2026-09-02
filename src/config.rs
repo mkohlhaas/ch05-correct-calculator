@@ -2,8 +2,8 @@
 
 // config.rs - Configuration (alternative to Singleton)
 
-use smart_default::SmartDefault;
 use crate::token::NumberType;
+use smart_default::SmartDefault;
 use std::sync::OnceLock;
 
 #[derive(Default, Debug, Clone)]
@@ -15,7 +15,7 @@ pub enum AngleMode {
 
 #[derive(SmartDefault, Debug, Clone)]
 pub struct CalculatorConfig {
-    #[default = "10"]
+    #[default = 10]
     pub precision: u32,
     pub angle_mode: AngleMode,
     pub notation: NumberType,

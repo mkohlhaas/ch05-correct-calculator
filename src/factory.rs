@@ -28,6 +28,7 @@
 
 use crate::Token;
 use crate::token::{Function, Number, NumberKind, Operator};
+use std::fmt::{self, Display};
 
 // //////////////////// //
 // 1. Abstract Products //
@@ -38,7 +39,6 @@ use crate::token::{Function, Number, NumberKind, Operator};
 // Trait for number tokens
 pub trait NumberToken {
     fn value(&self) -> f64;
-    fn format(&self) -> String;
 }
 
 // Trait for operator tokens
@@ -64,9 +64,11 @@ impl NumberToken for StandardNumberToken {
     fn value(&self) -> f64 {
         self.0.value
     }
+}
 
-    fn format(&self) -> String {
-        self.0.to_string()
+impl Display for StandardNumberToken {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
@@ -118,9 +120,11 @@ impl NumberToken for ScientificNumberToken {
     fn value(&self) -> f64 {
         self.0.value
     }
+}
 
-    fn format(&self) -> String {
-        self.0.to_string()
+impl Display for ScientificNumberToken {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 

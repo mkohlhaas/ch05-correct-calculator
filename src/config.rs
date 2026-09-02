@@ -14,7 +14,6 @@ pub enum AngleMode {
 
 #[derive(Default, Debug, Clone)]
 pub struct CalculatorConfig {
-    #[default = "10"]
     pub precision: u32,
     pub angle_mode: AngleMode,
     pub notation: NumberType,
@@ -43,7 +42,7 @@ impl CalculatorConfig {
 }
 
 // Constants
-pub const DEFAULT_PRECISION: u32 = 10;
+pub const DEFAULT_PRECISION: u32 = 0;
 pub const MAX_PRECISION: u32 = 100;
 
 // If we need a global configuration (alternative to Singleton)
@@ -86,7 +85,7 @@ mod tests {
     #[test]
     fn test_default_config() {
         let c = CalculatorConfig::default();
-        assert_eq!(c.precision, 10);
+        assert_eq!(c.precision, 0);
         assert!(matches!(c.angle_mode, AngleMode::Radians));
         assert!(matches!(c.notation, NumberType::Decimal));
     }
@@ -102,7 +101,7 @@ mod tests {
     #[test]
     fn test_engineering_config() {
         let c = CalculatorConfig::engineering();
-        assert_eq!(c.precision, 10);
+        assert_eq!(c.precision, 0);
         assert!(matches!(c.angle_mode, AngleMode::Radians));
         assert!(matches!(c.notation, NumberType::Engineering));
     }
@@ -110,7 +109,7 @@ mod tests {
     #[test]
     fn test_global_config() {
         let cfg = get_global_config();
-        assert_eq!(cfg.precision, 10);
+        assert_eq!(cfg.precision, 0);
         assert!(matches!(cfg.angle_mode, AngleMode::Radians));
         assert!(matches!(cfg.notation, NumberType::Decimal));
     }
@@ -119,7 +118,7 @@ mod tests {
     fn test_pool_get_config() {
         let pool = CalculatorPool::new(CalculatorConfig::default());
         let cfg = pool.get_config();
-        assert_eq!(cfg.precision, 10);
+        assert_eq!(cfg.precision, 0);
         assert!(matches!(cfg.angle_mode, AngleMode::Radians));
         assert!(matches!(cfg.notation, NumberType::Decimal));
     }

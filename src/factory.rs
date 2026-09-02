@@ -23,13 +23,13 @@
 // factory.rs - Abstract Factory implementation
 
 use crate::Token;
-use crate::token::{Function, Number, NumberFormat, Operator};
+use crate::token::{Function, Number, NumberKind, Operator};
 
 // //////////////////// //
 // 1. Abstract Products //
 // //////////////////// //
 
-// We want to produce Tokens!
+// We want to produce different kinds of Tokens!
 
 // Trait for number tokens
 pub trait NumberToken {
@@ -51,7 +51,8 @@ pub trait OperatorToken {
 // 2.1 Standard Tokens //
 // ------------------- //
 
-// Standard calculator implementation
+// for Standard Calculator mode
+
 #[derive(Debug, PartialEq)]
 pub struct StandardNumberToken(Number);
 
@@ -104,7 +105,8 @@ impl From<StandardOperatorToken> for Token {
 // 2.2. Scientific Tokens //
 // ---------------------- //
 
-// Scientific calculator implementation
+// for Scientific Calculator mode
+
 #[derive(Debug, PartialEq)]
 pub struct ScientificNumberToken(Number);
 
@@ -182,6 +184,7 @@ impl From<ScientificOperatorToken> for Token {
 // ...
 
 pub trait TokenFactory {
+    // type alias `Number` should be called NumberToken but this name is already used by the trait
     type Number: NumberToken + Into<Token>;
     type Operator: OperatorToken + Into<Token>;
 
@@ -239,13 +242,11 @@ impl TokenFactory for ScientificFactory {
         match s.parse::<f64>() {
             Ok(value) => {
                 let format = if s.contains('e') || s.contains('E') {
-                    NumberFormat::Scientific
+                    NumberKind::Scientific
                 } else {
-                    NumberFormat::Decimal
+                    NumberKind::Decimal
                 };
-                Ok(ScientificNumberToken(Number::new_with_format(
-                    value, format,
-                )))
+                Ok(ScientificNumberToken(Number::new_with_kind(value, format)))
             }
             Err(_) => Err(format!("Invalid number: {}", s)),
         }

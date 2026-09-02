@@ -12,21 +12,12 @@ pub enum AngleMode {
     Radians,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Default, Debug, Clone)]
 pub struct CalculatorConfig {
+    #[default = "10"]
     pub precision: u32,
     pub angle_mode: AngleMode,
     pub notation: NumberType,
-}
-
-impl Default for CalculatorConfig {
-    fn default() -> Self {
-        Self {
-            precision: DEFAULT_PRECISION,
-            angle_mode: Default::default(),
-            notation: Default::default(),
-        }
-    }
 }
 
 impl CalculatorConfig {

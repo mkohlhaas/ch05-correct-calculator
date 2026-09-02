@@ -62,7 +62,7 @@ impl NumberToken for StandardNumberToken {
     }
 
     fn format(&self) -> String {
-        self.0.format()
+        self.0.to_string()
     }
 }
 
@@ -116,7 +116,7 @@ impl NumberToken for ScientificNumberToken {
     }
 
     fn format(&self) -> String {
-        self.0.format()
+        self.0.to_string()
     }
 }
 
